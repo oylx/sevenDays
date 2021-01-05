@@ -9,10 +9,10 @@
 
  */
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const config = {
-  mode: "none",
-  entry: "./src/index.js",
+module.exports = {
+  entry: "./src/main.js",
   output: {
     filename: "bundle.js",
   },
@@ -28,7 +28,13 @@ const config = {
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin()],
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: "Webpack Plugin Sample",
+      meta: {
+        viewport: "width=device-width",
+      },
+    }),
+  ],
 };
-
-module.exports = config;
