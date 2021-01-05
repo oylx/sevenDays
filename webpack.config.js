@@ -23,7 +23,7 @@ const config = {
       },
       {
         test: /\.md$/,
-        use: "./markdown-loader",
+        use: ["html-loader", "./markdown-loader"],
       },
     ],
   },

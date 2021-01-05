@@ -127,7 +127,10 @@ __webpack_require__.r(__webpack_exports__);
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = "<h1 id=\"hi\">hi</h1>\n"
+// Module
+var code = "<h1 id=\"hi\">hi</h1>\n";
+// Exports
+module.exports = code;
 
 /***/ })
 /******/ ]);
