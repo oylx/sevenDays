@@ -8,6 +8,7 @@
  * @type {Configuration}
 
  */
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const config = {
   mode: "none",
@@ -27,6 +28,7 @@ const config = {
       },
     ],
   },
+  plugins: [new CleanWebpackPlugin()],
 };
 
 module.exports = config;
