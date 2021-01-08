@@ -8,24 +8,21 @@
  * @type {Configuration}
 
  */
+const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const RemoveCommentsPlugin = require("./remove-comments-plugin.js");
+const RemoveCommentsPlugin = require("../remove-comments-plugin.js");
 const path = require("path");
-
 module.exports = {
   mode: "none",
   entry: "./src/main.js",
-  devtool: "source-map", // source map 设置
-  output: {
-    filename: "bundle.js",
-  },
+  devtool: "source-mcheap-module-eval-source-map", // source map 设置
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: ["css-loader"],
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.md$/,
@@ -34,19 +31,18 @@ module.exports = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: "Webpack Plugin Sample",
       template: "./src/index.html",
     }),
-    // 用于生成 about.html
-    new HtmlWebpackPlugin({
-      filename: "about.html",
-      template: "./index.html",
-    }),
     new CopyWebpackPlugin({
-      patterns: [path.resolve(__dirname, "public")],
+      patterns: [path.resolve(__dirname, "../public")],
     }),
-    new RemoveCommentsPlugin(),
+    // HMR 特性所需要的插件
+    new webpack.HotModuleReplacementPlugin(),
   ],
+  devServer: {
+    hot: true,
+    open: true,
+  },
 };
