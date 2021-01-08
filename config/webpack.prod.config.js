@@ -13,26 +13,21 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const RemoveCommentsPlugin = require("../remove-comments-plugin.js");
 const path = require("path");
-const allDevtoolModes = [
-  "eval",
-  "inline-cheap-source-map",
-  "inline-cheap-module-source-map",
-  "source-map",
-  "inline-source-map",
-  "hidden-source-map",
-  "nosources-source-map",
-  "cheap-eval-source-map",
-  "eval-source-map",
-  "cheap-source-map",
-  "cheap-module-source-map",
-  "cheap-module-eval-source-map",
-];
-module.exports = allDevtoolModes.map((item) => ({
-  devtool: item,
+module.exports = {
   mode: "none",
   entry: "./src/main.js",
+  devtool: "source-map", // source map 设置
   output: {
-    filename: `js/${item}.js`,
+    filename: "bundle.js",
+  },
+  // ... 其他配置项
+  optimization: {
+    // 模块只导出被使用的成员
+    usedExports: true,
+    // 尽可能合并每一个模块到一个函数中
+    concatenateModules: true,
+    // 压缩输出结果
+    minimize: true,
   },
   module: {
     rules: [
@@ -44,6 +39,17 @@ module.exports = allDevtoolModes.map((item) => ({
         test: /\.md$/,
         use: ["html-loader", "./markdown-loader"],
       },
+      {
+        test: /\.js$/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            // presets: [["@babel/preset-env", { modules: "commonjs" }]],
+            // presets: [["@babel/preset-env", { modules: false }]],
+            presets: [["@babel/preset-env"]],
+          },
+        },
+      },
     ],
   },
   plugins: [
@@ -51,44 +57,15 @@ module.exports = allDevtoolModes.map((item) => ({
     new HtmlWebpackPlugin({
       title: "Webpack Plugin Sample",
       template: "./src/index.html",
-      filename: `${item}.html`,
     }),
+    // 用于生成 about.html
+    new HtmlWebpackPlugin({
+      filename: "about.html",
+      template: "./index.html",
+    }),
+    new CopyWebpackPlugin({
+      patterns: [path.resolve(__dirname, "./../public")],
+    }),
+    new RemoveCommentsPlugin(),
   ],
-}));
-
-// module.exports = {
-//   mode: "none",
-//   entry: "./src/main.js",
-//   devtool: "source-map", // source map 设置
-//   output: {
-//     filename: "bundle.js",
-//   },
-//   module: {
-//     rules: [
-//       {
-//         test: /\.css$/,
-//         use: ["css-loader"],
-//       },
-//       {
-//         test: /\.md$/,
-//         use: ["html-loader", "./markdown-loader"],
-//       },
-//     ],
-//   },
-//   plugins: [
-//     new CleanWebpackPlugin(),
-//     new HtmlWebpackPlugin({
-//       title: "Webpack Plugin Sample",
-//       template: "./src/index.html",
-//     }),
-//     // 用于生成 about.html
-//     new HtmlWebpackPlugin({
-//       filename: "about.html",
-//       template: "./index.html",
-//     }),
-//     new CopyWebpackPlugin({
-//       patterns: [path.resolve(__dirname, "public")],
-//     }),
-//     new RemoveCommentsPlugin(),
-//   ],
-// };
+};

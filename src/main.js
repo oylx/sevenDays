@@ -2,6 +2,10 @@
 
 import createHeading from "./heading.js";
 import createEditor from "./editor.js";
+// ./src/main.js
+
+import { Button } from "./components";
+
 import "./main.css";
 
 const heading = createHeading();
@@ -9,6 +13,7 @@ const editor = createEditor();
 
 document.body.append(heading);
 document.body.append(editor);
+document.body.appendChild(Button());
 
 console.log("main.js running");
 
